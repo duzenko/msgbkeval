@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'create_membership.dart';
+
 class MembershipsWidget extends StatefulWidget {
   const MembershipsWidget({Key? key}) : super(key: key);
 
@@ -61,5 +63,9 @@ class _MembershipsWidgetState extends State<MembershipsWidget> {
 
   void tapLearnMore() {}
 
-  void tapCreate() {}
+  void tapCreate() {
+    final route =
+        MaterialPageRoute(builder: (c) => const CreateMembershipWidget());
+    Navigator.of(context).push(route);
+  }
 }

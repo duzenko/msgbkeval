@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:msgbkeval/membership_model.dart';
+import 'package:msgbkeval/rollover_dialog.dart';
 
 import 'widgets.dart';
 
@@ -10,10 +12,7 @@ class CreateMembershipWidget extends StatefulWidget {
 }
 
 class _CreateMembershipWidgetState extends State<CreateMembershipWidget> {
-  String? description;
-  bool allowRollover = false;
-  bool autoRenew = false;
-  List included = [1];
+  final model = MembershipModel();
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +29,7 @@ class _CreateMembershipWidgetState extends State<CreateMembershipWidget> {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
           const ListTile(
             title: TextField(
@@ -40,22 +38,7 @@ class _CreateMembershipWidgetState extends State<CreateMembershipWidget> {
               ),
             ),
           ),
-          Row(
-            children: [
-              MoneyInput(),
-              const Spacer(),
-              if (description == null)
-                Container(
-                  alignment: Alignment.topRight,
-                  margin: const EdgeInsets.symmetric(horizontal: 22),
-                  child: TextButton(
-                    onPressed: tapAddDescription,
-                    child: const Text('Add Description'),
-                  ),
-                ),
-            ],
-          ),
-          if (description != null)
+          if (model.description != null)
             const ListTile(
               title: TextField(
                 decoration: InputDecoration(
@@ -63,106 +46,79 @@ class _CreateMembershipWidgetState extends State<CreateMembershipWidget> {
                 ),
                 maxLines: 3,
               ),
-            ),
-          SwitchListTile(
-            value: allowRollover,
-            onChanged: allowRolloverChanged,
-            title: const Text('Allow unused sessions to rollover'),
-          ),
-          if (allowRollover)
+            )
+          else
             ListTile(
-              title: const Text('Rollover duration in months'),
-              trailing: DropdownButton(
-                value: '1',
-                items: ['1', '2', '3', '6', '12']
-                    .map(
-                      (e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(e),
-                      ),
-                    )
-                    .toList(),
-                onChanged: rolloverMonthsChanged,
+              title: const Text('Description not set'),
+              trailing: TextButton(
+                onPressed: tapAddDescription,
+                child: const Text('Add'),
               ),
             ),
-          SwitchListTile(
-            value: autoRenew,
-            onChanged: autoRenewChanged,
-            title: const Text('Automatically renew membership every month'),
-          ),
-          if (autoRenew)
-            const ListTile(
-              title: Text('Auto renewing duration cap'),
-              trailing: SizedBox(
-                width: 44,
-                child: TextField(),
-              ),
-            ),
+          Container(height: 22),
+          MoneyInput(),
+          Container(height: 22),
           ListTile(
-            title: Text('Services included: ${included.length}'),
+            title: Text(model.rolloverRenewText),
+            trailing: TextButton(
+              onPressed: tapEditRollover,
+              child: const Text('Change'),
+            ),
+          ),
+          Container(height: 22),
+          ListTile(
+            title: Text('Services included: ${model.included.length}'),
             trailing: TextButton(
               onPressed: tapAddIncluded,
               child: const Text('Add'),
             ),
           ),
-          ...included
-              .map(
-                (e) => ListTile(
-                  title: Card(
-                    child: Column(
-                      children: [
-                        const ListTile(
-                          title: Text('All 22 min Acupuncture Services'),
-                          trailing: Text('3 per month'),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            TextButton(
-                              onPressed: tapEditGroup,
-                              child: const Text('Edit'),
-                            ),
-                            const SizedBox(width: 8),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-              .toList(),
+          ...model.included.map(buildIncluded).toList(),
         ],
       ),
     );
   }
 
-  void allowRolloverChanged(bool value) {
-    setState(() {
-      allowRollover = value;
-    });
-  }
-
   void tapAddDescription() {
     setState(() {
-      description = '';
-    });
-  }
-
-  void rolloverMonthsChanged(value) {}
-
-  void autoRenewChanged(bool value) {
-    setState(() {
-      autoRenew = value;
+      model.description = '';
     });
   }
 
   void tapAddIncluded() {
     setState(() {
-      included.add(1);
+      model.included.add(1);
     });
   }
 
   void tapEditGroup() {}
 
   void tapSave() {}
+
+  Future<void> tapEditRollover() async {
+    await showDialog(
+      context: context,
+      builder: (c) => MembershipRolloverWidget(model),
+    );
+    setState(() {});
+  }
+
+  buildIncluded(e) {
+    return ListTile(
+      title: Card(
+        child: Column(
+          children: [
+            ListTile(
+              title: const Text('3 per month'),
+              subtitle: const Text('All 22 min Acupuncture Services'),
+              trailing: TextButton(
+                onPressed: tapEditGroup,
+                child: const Text('Edit'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

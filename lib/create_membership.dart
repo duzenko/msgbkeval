@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:msgbkeval/membership_model.dart';
 import 'package:msgbkeval/rollover_dialog.dart';
 
+import 'membership_group_dialog.dart';
 import 'widgets.dart';
 
 class CreateMembershipWidget extends StatefulWidget {
@@ -18,7 +19,7 @@ class _CreateMembershipWidgetState extends State<CreateMembershipWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create a new Membership'),
+        title: const Text('Create Membership'),
         actions: [
           Padding(
             padding: const EdgeInsets.all(9),
@@ -85,13 +86,22 @@ class _CreateMembershipWidgetState extends State<CreateMembershipWidget> {
     });
   }
 
-  void tapAddIncluded() {
+  Future<void> tapAddIncluded() async {
     setState(() {
-      model.included.add(1);
+      model.included.add(MembershipGroupModel());
     });
+    await tapEditGroup(model.included.last);
   }
 
-  void tapEditGroup() {}
+  Future<void> tapEditGroup(MembershipGroupModel model) async {
+    final del = await showDialog(
+      context: context,
+      builder: (c) => MembershipGroupWidget(model),
+    );
+    setState(() {
+      if (del != null) this.model.included.remove(model);
+    });
+  }
 
   void tapSave() {}
 
@@ -103,16 +113,16 @@ class _CreateMembershipWidgetState extends State<CreateMembershipWidget> {
     setState(() {});
   }
 
-  buildIncluded(e) {
+  buildIncluded(MembershipGroupModel e) {
     return ListTile(
       title: Card(
         child: Column(
           children: [
             ListTile(
-              title: const Text('3 per month'),
-              subtitle: const Text('All 22 min Acupuncture Services'),
+              title: Text(e.termsText),
+              subtitle: Text(e.servicesText),
               trailing: TextButton(
-                onPressed: tapEditGroup,
+                onPressed: () => tapEditGroup(e),
                 child: const Text('Edit'),
               ),
             ),

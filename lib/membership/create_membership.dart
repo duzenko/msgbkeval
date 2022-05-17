@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:msgbkeval/membership_model.dart';
-import 'package:msgbkeval/rollover_dialog.dart';
 
 import 'membership_group_dialog.dart';
-import 'widgets.dart';
+import '../widgets.dart';
+import 'membership_model.dart';
+import 'rollover_dialog.dart';
 
 class CreateMembershipWidget extends StatefulWidget {
   const CreateMembershipWidget({Key? key}) : super(key: key);

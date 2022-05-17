@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:msgbkeval/membership_model.dart';
 
+import 'membership_model.dart';
 import 'select_services_dialog.dart';
 
 class MembershipGroupWidget extends StatefulWidget {

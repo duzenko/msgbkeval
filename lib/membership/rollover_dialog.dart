@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:msgbkeval/membership_model.dart';
+
+import 'membership_model.dart';
 
 class MembershipRolloverWidget extends StatefulWidget {
   final MembershipModel model;

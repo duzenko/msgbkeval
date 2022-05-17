@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'memberships.dart';
+import 'enroll/enroll.dart';
+import 'membership/memberships.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,13 +36,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool toggle = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            onPressed: toggleWidget,
+            icon: Icon(toggle ? Icons.toggle_on : Icons.toggle_off),
+          ),
+        ],
       ),
-      body: const MembershipsWidget(),
+      body: toggle ? const EnrollWidget() : const MembershipsWidget(),
     );
+  }
+
+  void toggleWidget() {
+    setState(() {
+      toggle = !toggle;
+    });
   }
 }

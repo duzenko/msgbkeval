@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: prefer_const_constructors
 
+import 'package:flutter/material.dart';
+import 'package:msgbkeval/loremipsum/lorem_ipsum.dart';
+
+import 'billing_review_dialog.dart';
 import 'payment_method_dialog.dart';
 import 'select_membership_dialog.dart';
 
@@ -11,6 +15,8 @@ class EnrollWidget extends StatefulWidget {
 }
 
 class _EnrollWidgetState extends State<EnrollWidget> {
+  final memberships = [];
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,27 +33,38 @@ class _EnrollWidgetState extends State<EnrollWidget> {
               ),
               ElevatedButton(
                 onPressed: tapPurchase,
-                child: const Text('Purchase'),
+                child: Text('Purchase'),
               ),
             ],
           ),
-          const ListTile(
-            title: Text('None right now'),
-          ),
-          const SizedBox(height: 11),
+          if (memberships.isEmpty)
+            const ListTile(
+              title: Text('None right now'),
+            )
+          else
+            ...memberships.map(buildListTile).toList(),
+          SizedBox(height: 11),
           Text(
             'Expired Memberships',
             style: Theme.of(context).textTheme.headline6,
           ),
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 2),
-            child: const ListTile(
-              title: Text('Lorem ipsum \$22'),
+            padding: EdgeInsets.symmetric(vertical: 2),
+            child: ListTile(
+              title: Text('${loremIpsum(words: 2)} \$22'),
               subtitle: Text('Cancelled on May 17, 2022'),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  ListTile buildListTile(e) {
+    return ListTile(
+      title: Text('${loremIpsum(words: 2)} \$33'),
+      subtitle: Text('Renews on June 18, 2022'),
+      trailing: Text('4 credits\navailable'),
     );
   }
 
@@ -57,9 +74,18 @@ class _EnrollWidgetState extends State<EnrollWidget> {
       builder: (c) => const SelectMembershipDialog(),
     );
     if (x == null) return;
-    await showDialog(
+    final y = await showDialog(
       context: context,
       builder: (c) => const PaymentMethodDialog(),
     );
+    if (y == null) return;
+    final z = await showDialog(
+      context: context,
+      builder: (c) => const BillingReviewWidget(),
+    );
+    if (z == null) return;
+    setState(() {
+      memberships.add(1);
+    });
   }
 }

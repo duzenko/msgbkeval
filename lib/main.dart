@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 import 'enroll/enroll.dart';
@@ -20,16 +22,14 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.black,
         ),
       ),
-      home: const MyHomePage(title: 'MassageBook'),
+      home: const MyHomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -41,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Memberships'),
         actions: [
           IconButton(
             onPressed: toggleWidget,

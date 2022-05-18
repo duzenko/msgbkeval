@@ -60,11 +60,14 @@ class _EnrollWidgetState extends State<EnrollWidget> {
     );
   }
 
-  ListTile buildListTile(e) {
-    return ListTile(
-      title: Text('${loremIpsum(words: 2)} \$33'),
-      subtitle: Text('Renews on June 18, 2022'),
-      trailing: Text('4 credits\navailable'),
+  Widget buildListTile(e) {
+    return GestureDetector(
+      onTap: tapTile,
+      child: ListTile(
+        title: Text('${loremIpsum(words: 2)} \$33'),
+        subtitle: Text('Renews on June 18, 2022'),
+        trailing: Text('4 credits\navailable'),
+      ),
     );
   }
 
@@ -81,11 +84,18 @@ class _EnrollWidgetState extends State<EnrollWidget> {
     if (y == null) return;
     final z = await showDialog(
       context: context,
-      builder: (c) => const BillingReviewWidget(),
+      builder: (c) => const BillingReviewDialog(),
     );
     if (z == null) return;
     setState(() {
       memberships.add(1);
     });
+  }
+
+  void tapTile() {
+    showDialog(
+      context: context,
+      builder: (c) => const MembershipActionsDialog(),
+    );
   }
 }
